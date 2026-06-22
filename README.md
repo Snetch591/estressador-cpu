@@ -4,7 +4,7 @@ Como compilar e executar (Code: :Blocks é necessário):
 1. Baixe ou clone este repositório.
 2. Abra o Code::Blocks.
 3. Crie um novo projeto Win32 GUI Project.
-4. Substitua o conteúdo do arquivo principal pelo código em `cpu_stresser_gui.c`.
+4. Substitua o conteúdo do arquivo principal pelo código no repositório.
 5. Vá em Project → Build Options → Linker settings e adicione `-lm` em "Other linker options".
 6. Compile (F9) e execute.
 
