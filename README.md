@@ -1,6 +1,6 @@
 Estressador de CPU criado em C
 
-Como compilar e executar (Code: :Blocks é necessário):
+Como compilar e executar (Code: :Blocks é necessário pois não consegui descobrir como executar sem o Code: :Blocks):
 1. Baixe ou clone este repositório.
 2. Abra o Code::Blocks.
 3. Crie um novo projeto Win32 GUI Project.
