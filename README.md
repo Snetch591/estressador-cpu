@@ -7,8 +7,11 @@ Como compilar e executar (Code: :Blocks é necessário pois não consegui descob
 4. Substitua o conteúdo do arquivo principal pelo código no repositório.
 5. Vá em Project → Build Options → Linker settings e adicione `-lm` em "Other linker options".
 6. Compile (F9) e execute.
+
 3,1. Ou crie um novo file c source.
+
 3,2.Copie o código fornecido no GitHub no novo file.
+
 3,3. Clique em build and run.
 
 Como usar:
