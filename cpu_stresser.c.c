@@ -98,7 +98,7 @@ void StopStress(HWND hwnd) {
 
 
 /*PROCEDIMENTO DA JANELA (Window Procedure)
-   Esta função é o "coração" do programa Win32.
+   Coração do programa Win32.
    Ela recebe e processa todas as mensagens do Windows (cliques, timer, fechamento, etc).
 */
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
