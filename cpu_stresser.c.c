@@ -2,33 +2,33 @@
 #include <stdio.h>
 #include <math.h>
 
-/*VARI¡VEIS GLOBAIS
-   Essas vari·veis s„o acessadas por m˙ltiplas partes do programa
+/*VARI√ÅVEIS GLOBAIS
+   Essas vari√°veis s√£o acessadas por m√∫ltiplas partes do programa
    (janela principal, threads de estresse e timer).
 */
 volatile int stop_flag = 0;           // Flag compartilhada para parar todas as threads
-volatile long long operations = 0;    // Contador de operaÁıes (aproximaÁ„o de carga)
+volatile long long operations = 0;    // Contador de opera√ß√µes (aproxima√ß√£o de carga)
 HANDLE* threads = NULL;               // Array de handles das threads de estresse
-int num_threads = 0;                  // Quantidade de threads em execuÁ„o
+int num_threads = 0;                  // Quantidade de threads em execu√ß√£o
 int intensity = 5;                    // Intensidade do estresse (1-10)
-int duration = 0;                     // DuraÁ„o m·xima em segundos (0 = infinito)
-DWORD start_time = 0;                 // Momento em que o estresse comeÁou
+int duration = 0;                     // Dura√ß√£o m√°xima em segundos (0 = infinito)
+DWORD start_time = 0;                 // Momento em que o estresse come√ßou
 DWORD end_time = 0;                   // Momento em que o estresse deve terminar
 
-/* Handles dos controles da interface gr·fica */
+/* Handles dos controles da interface gr√°fica */
 HWND hEditThreads, hEditIntensity, hEditDuration;
 HWND hBtnStart, hBtnStop, hStatusLabel, hLog;
 
 /*ESTRUTURA DE DADOS */
 typedef struct {
     int intensity;     // Intensidade passada para cada thread
-    int thread_id;     // Identificador da thread (para debug futuro)
+    int thread_id;
 } ThreadData;
 
 
-/*FUN«√O PRINCIPAL DE ESTRESSE
-   Esta È a funÁ„o executada por cada thread.
-   Ela realiza c·lculos matem·ticos intensos para consumir CPU.
+/*FUN√á√ÉO PRINCIPAL DE ESTRESSE
+   Esta √© a fun√ß√£o executada por cada thread.
+   Ela realiza c√°lculos matem√°ticos intensos para consumir CPU.
 */
 DWORD WINAPI stress_worker(LPVOID arg) {
     ThreadData* data = (ThreadData*)arg;
@@ -38,9 +38,9 @@ DWORD WINAPI stress_worker(LPVOID arg) {
     while (!stop_flag) {
         // Loop interno: quanto maior a intensity, mais pesado o trabalho
         for (long i = 0; i < 100000 * intensity; i++) {
-            // OperaÁıes matem·ticas variadas para maximizar uso da CPU
+            // Opera√ß√µes matem√°ticas variadas para maximizar uso da CPU
             x += sin(i) * cos(i) + sqrt(i + 1.0) * tan(i * 0.001);
-            x = x * 0.999 + 1.0;   // Evita que o compilador simplifique o c·lculo
+            x = x * 0.999 + 1.0;   // Evita que o compilador simplifique o c√°lculo
         }
         operations += 100000LL * intensity;  // Atualiza contador global
     }
@@ -48,8 +48,8 @@ DWORD WINAPI stress_worker(LPVOID arg) {
 }
 
 
-/*ATUALIZA«√O DO STATUS
-   Atualiza o label de status a cada 300ms com informaÁıes em tempo real.
+/*ATUALIZA√á√ÉO DO STATUS
+   Atualiza o label de status a cada 300ms com informa√ß√µes em tempo real.
 */
 void UpdateStatus(HWND hwnd) {
     char buffer[300];
@@ -71,15 +71,15 @@ void UpdateStatus(HWND hwnd) {
 }
 
 
-/*FUN«√O PARA PARAR O ESTRESSE
-   FunÁ„o reutiliz·vel para encerrar todas as threads de forma segura.
+/*FUN√á√ÉO PARA PARAR O ESTRESSE
+   Fun√ß√£o reutiliz√°vel para encerrar todas as threads de forma segura.
 */
 void StopStress(HWND hwnd) {
     if (threads == NULL) return;
 
     stop_flag = 1;                    // Sinaliza para todas as threads pararem
 
-    // Aguarda o tÈrmino de cada thread
+    // Aguarda o t√©rmino de cada thread
     for (int i = 0; i < num_threads; i++) {
         if (threads[i]) {
             WaitForSingleObject(threads[i], 1500);  // Timeout de 1.5s
@@ -90,7 +90,7 @@ void StopStress(HWND hwnd) {
     free(threads);
     threads = NULL;
 
-    // Restaura botıes da interface
+    // Restaura bot√µes da interface
     EnableWindow(hBtnStart, TRUE);
     EnableWindow(hBtnStop, FALSE);
     SetWindowText(hLog, "Estresse FINALIZADO.\r\n");
@@ -98,15 +98,15 @@ void StopStress(HWND hwnd) {
 
 
 /*PROCEDIMENTO DA JANELA (Window Procedure)
-   Esta funÁ„o È o "coraÁ„o" do programa Win32.
+   Esta fun√ß√£o √© o "cora√ß√£o" do programa Win32.
    Ela recebe e processa todas as mensagens do Windows (cliques, timer, fechamento, etc).
 */
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
 
-        case WM_COMMAND:                    // Evento de clique em botıes
-            if (LOWORD(wParam) == 1) {      // Bot„o INICIAR ESTRESSE
-                if (threads != NULL) return 0;  // J· est· rodando
+        case WM_COMMAND:                    // Evento de clique em bot√µes
+            if (LOWORD(wParam) == 1) {      // Bot√£o INICIAR ESTRESSE
+                if (threads != NULL) return 0;  // J√° est√° rodando
 
                 //LEITURA DAS ENTRADAS
                 char buf[32];
@@ -119,7 +119,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 GetWindowText(hEditDuration, buf, 32);
                 duration = atoi(buf);
 
-                //VALIDA«’ES
+                //VALIDA√á√ïES
                 SYSTEM_INFO sysinfo;
                 GetSystemInfo(&sysinfo);
 
@@ -136,7 +136,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 sprintf(buf, "%d", intensity);     SetWindowText(hEditIntensity, buf);
                 sprintf(buf, "%d", duration);      SetWindowText(hEditDuration, buf);
 
-                //INICIALIZA«√O DO ESTRESSE
+                //INICIALIZA√á√ÉO DO ESTRESSE
                 stop_flag = 0;
                 operations = 0;
                 start_time = GetTickCount();
@@ -146,7 +146,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 else
                     end_time = 0;
 
-                // Aloca memÛria para as threads
+                // Aloca mem√≥ria para as threads
                 threads = (HANDLE*)malloc(num_threads * sizeof(HANDLE));
                 ThreadData* data = (ThreadData*)malloc(num_threads * sizeof(ThreadData));
 
@@ -163,24 +163,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SetWindowText(hLog, "Estresse INICIADO...\r\n");
 
             }
-            else if (LOWORD(wParam) == 2) {   // Bot„o PARAR ESTRESSE
+            else if (LOWORD(wParam) == 2) {   // Bot√£o PARAR ESTRESSE
                 StopStress(hwnd);
             }
             break;
 
-        case WM_TIMER:                        // Timer para atualizaÁ„o periÛdica
+        case WM_TIMER:                        // Timer para atualiza√ß√£o peri√≥dica
             if (wParam == 1) {
                 UpdateStatus(hwnd);
 
-                // Verifica se o tempo de duraÁ„o acabou
+                // Verifica se o tempo de dura√ß√£o acabou
                 if (duration > 0 && GetTickCount() >= end_time) {
-                    SetWindowText(hLog, "Tempo m·ximo atingido. Estresse finalizado automaticamente.\r\n");
+                    SetWindowText(hLog, "Tempo m√°ximo atingido. Estresse finalizado automaticamente.\r\n");
                     StopStress(hwnd);
                 }
             }
             break;
 
-        case WM_DESTROY:                      // Usu·rio fechou a janela
+        case WM_DESTROY:                      // Usu√°rio fechou a janela
             stop_flag = 1;
             if (threads) {
                 StopStress(hwnd);
@@ -189,13 +189,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             return 0;
     }
 
-    // Passa mensagens n„o tratadas para o Windows processar
+    // Passa mensagens n√£o tratadas para o Windows processar
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 
 /*PONTO DE ENTRADA DO PROGRAMA (WinMain)
-   FunÁ„o principal para aplicaÁıes Windows com interface gr·fica.
+   Fun√ß√£o principal para aplica√ß√µes Windows com interface gr√°fica.
 */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
@@ -211,7 +211,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     RegisterClass(&wc);
 
-    //CRIA«√O DA JANELA PRINCIPAL
+    //CRIA√á√ÉO DA JANELA PRINCIPAL
     HWND hwnd = CreateWindowEx(
         0, CLASS_NAME, "Estressador de CPU - Win32",
         WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME,
@@ -221,7 +221,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     if (hwnd == NULL) return 0;
 
-    //CRIA«√O DOS CONTROLES (Interface)
+    //CRIA√á√ÉO DOS CONTROLES (Interface)
     CreateWindow("STATIC", "Numero de Threads:", WS_VISIBLE | WS_CHILD, 20, 20, 180, 25, hwnd, NULL, hInstance, NULL);
     hEditThreads = CreateWindow("EDIT", "8", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER, 210, 20, 100, 25, hwnd, NULL, hInstance, NULL);
 
@@ -242,7 +242,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     EnableWindow(hBtnStop, FALSE);
 
-    // Timer para atualizar status e verificar duraÁ„o
+    // Timer para atualizar status e verificar dura√ß√£o
     SetTimer(hwnd, 1, 300, NULL);
 
     ShowWindow(hwnd, nCmdShow);
